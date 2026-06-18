@@ -1,0 +1,55 @@
+services:
+  void-backend:
+    environment:
+      - DB_HOST=void-postgres
+      - DB_NAME=${POSTGRES_DB:-void_db}
+      - DB_USER=${POSTGRES_USER:-void_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=void-redis
+    depends_on:
+      void-postgres:
+        condition: service_healthy
+      void-redis:
+        condition: service_healthy
+
+  void-postgres:
+    image: postgres:15-alpine
+    container_name: void-postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-void_db}
+      - POSTGRES_USER=${POSTGRES_USER:-void_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=${POSTGRES_INITDB_ARGS:---encoding=UTF8}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-void_user} -d ${POSTGRES_DB:-void_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - void-network
+    restart: unless-stopped
+    expose:
+      - "5432"
+
+  void-redis:
+    image: redis:7-alpine
+    container_name: void-redis
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - void-network
+    restart: unless-stopped
+    expose:
+      - "6379"
+
+volumes:
+  postgres_data:
+  redis_data:

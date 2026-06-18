@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap");
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --void-bg:          #020617;
+  --void-surface:     #0f172a;
+  --void-surface-2:   #1e293b;
+  --void-border:      #334155;
+  --void-border-2:    #475569;
+  --void-text:        #f8fafc;
+  --void-muted:       #94a3b8;
+  --void-dim:         #475569;
+  --void-accent:      #22d3ee;
+  --void-accent-dim:  #06b6d4;
+  --void-success:     #22c55e;
+  --void-warning:     #f59e0b;
+  --void-danger:      #ef4444;
+  --void-danger-dim:  #dc2626;
+  --void-code-bg:     #020617;
+}
+
+html, body, #root {
+  height: 100%;
+  background: linear-gradient(to bottom right, #020617, #0f172a, #1e1b4b);
+  background-attachment: fixed;
+  color: var(--void-text);
+  font-family: "Outfit", system-ui, sans-serif;
+
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--void-bg); }
+::-webkit-scrollbar-thumb { background: var(--void-border-2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+@layer base {
+  :root {
+    --background: #020617;
+    --foreground: #f8fafc;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
+    --popover: #0f172a;
+    --popover-foreground: #f8fafc;
+    --primary: #22d3ee;
+    --primary-foreground: #020617;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --accent: #1e293b;
+    --accent-foreground: #22d3ee;
+    --destructive: #ef4444;
+    --border: #334155;
+    --input: #334155;
+    --ring: #22d3ee;
+    --radius: 0px;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background: linear-gradient(to bottom right, #020617, #0f172a, #1e1b4b);
+    background-attachment: fixed;
+    color: var(--void-text);
+  }
+
+  html {
+    font-family: "Outfit", system-ui, sans-serif;
+  }
+}

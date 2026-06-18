@@ -1,0 +1,80 @@
+services:
+  void-nginx:
+    image: nginx:alpine
+    container_name: void-nginx
+    ports:
+      - "127.0.0.1:38271:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - void-frontend
+      - void-backend
+    networks:
+      - void-network
+    restart: unless-stopped
+
+  void-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: void-frontend:latest
+    pull_policy: build
+    container_name: void-frontend
+    environment:
+      - VITE_API_URL=/api
+    depends_on:
+      - void-backend
+    networks:
+      - void-network
+    restart: unless-stopped
+    expose:
+      - "3000"
+
+  void-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: void-backend:latest
+    pull_policy: build
+    container_name: void-backend
+    environment:
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-void_db}
+      - DB_USER=${DB_USER:-void_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST:-localhost}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - JWT_SECRET=${JWT_SECRET}
+      - API_HOST=${API_HOST:-http://localhost}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID:-}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET:-}
+      - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID:-}
+      - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET:-}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_FROM_EMAIL=${SMTP_FROM_EMAIL:-}
+      - VOID_BASE_URL=${VOID_BASE_URL:-http://localhost:38271}
+      - VOID_MANAGED=${VOID_MANAGED:-false}
+    networks:
+      - void-network
+    restart: unless-stopped
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  void-network:
+    name: void-network
+    driver: bridge

@@ -1,0 +1,47 @@
+[package]
+name = "void"
+version = "1.0.0"
+edition = "2021"
+description = "VOID CLI — Vault-Oriented Infrastructure for Developers"
+
+[[bin]]
+name = "void"
+path = "src/main.rs"
+
+[dependencies]
+# CLI parsing
+clap = { version = "4", features = ["derive", "env"] }
+colored = "2"
+dialoguer = "0.11"
+
+# Async runtime + HTTP
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", features = ["json", "cookies"] }
+
+# Crypto
+ring = "0.17"
+argon2 = "0.5"
+x25519-dalek = { version = "2", features = ["static_secrets"] }
+zeroize = { version = "1", features = ["derive"] }
+rand = "0.8"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+
+# Utilities
+anyhow = "1"
+dirs = "5"
+base64 = { version = "0.22", features = ["alloc"] }
+open = "5"
+crossterm = "0.28"
+ctrlc = "3"
+libc = "0.2"
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

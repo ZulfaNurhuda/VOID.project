@@ -1,0 +1,53 @@
+# Dependencies
+backend/vendor/
+frontend/node_modules/
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# GitHub / CI
+.github/
+.husky/
+
+# Build artifacts
+frontend/dist/
+backend/dist/
+backend/void-backend
+backend/*.exe
+cli/target/
+*.tsbuildinfo
+
+# Logs
+*.log
+logs/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets & config (use env vars in Docker)
+.env*
+!.env.example
+compose.override.yml
+compose.override.yml.disabled
+
+# Dev docs (not needed in container)
+README.md
+LICENSE
+CLAUDE.md
+CLAUDE.CONTEXT/
+docs/
+*.mp4
+*.gif
+*.png
+*.svg
+
+# Test & tooling
+*.test
+*.out
+coverage.*
